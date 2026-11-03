@@ -27,32 +27,24 @@ Because $\frac{\partial C_t}{\partial C_{t-1}} = f_t$, when the forget gate $f_t
 ```
 Imdb_sentiment_analysis-using-Rnn/
 │
-├── data/                                 # Data folder
-│   ├── raw/                              # Raw Stanford aclImdb archive & extracts (.gitkeep)
-│   └── processed/                        # Parsed imdb_train.csv & imdb_test.csv (.gitkeep)
+├── notebooks/                            # Jupyter Notebooks
+│   └── imdb_sentiment_analysis.ipynb     # Interactive research & exploration notebook
 │
-├── notebooks/                            # Exploratory Jupyter Notebooks
-│   └── imdb_sentiment_analysis.ipynb     # Interactive research notebook
-│
-├── outputs/                              # Experiment artifacts
-│   ├── figures/                          # Saved loss curves, confusion matrices, bar charts
-│   └── models/                           # Trained PyTorch model checkpoints (.pt)
-│
-├── config.py                             # Deterministic seed (42), device selector, hyperparameter defaults
-├── preprocessor.py                       # Contractions mapping, regex cleaner & tokenization
-├── vocabulary.py                         # Strict anti-leakage vocabulary engine (pad=0, unk=1, min_freq=2)
-├── dataset.py                            # IMDb data fetcher, PyTorch Dataset & DataLoader factory
-├── models.py                             # VanillaRNN, LSTM, GRU, BiLSTM model definitions
-├── engine.py                             # Universal training & evaluation loops (fit, evaluate, early stopping)
-├── visualize.py                          # Publication-quality plotting routines
-├── predict.py                            # Sentiment inference function & benchmark test reviews
-│
-├── main.py                               # Full end-to-end training & evaluation pipeline
-├── tune.py                               # Hyperparameter tuning runner (Sequence Length & Hidden Dim)
-├── inference.py                          # CLI & interactive sentiment predictor
+├── src/                                  # All project Python source modules
+│   ├── config.py                         # Deterministic seed (42), device selector, hyperparameter defaults
+│   ├── dataset.py                        # IMDb dataset fetcher, PyTorch Dataset & DataLoaders
+│   ├── engine.py                         # Universal training, evaluation & early stopping loops
+│   ├── inference.py                      # CLI & interactive sentiment predictor
+│   ├── main.py                           # Full end-to-end training & evaluation pipeline
+│   ├── models.py                         # VanillaRNN, LSTM, GRU, BiLSTM model definitions
+│   ├── predict.py                        # Sentiment inference function & benchmark test reviews
+│   ├── preprocessor.py                   # Contractions mapping, regex cleaner & tokenization
+│   ├── tune.py                           # Hyperparameter tuning runner (Sequence Length & Hidden Dim)
+│   ├── visualize.py                      # Learning curves, confusion matrices & bar charts
+│   └── vocabulary.py                     # Strict anti-leakage vocabulary engine (pad=0, unk=1)
 │
 ├── requirements.txt                      # Project dependencies
-├── .gitignore                            # Git exclusion rules
+├── .gitignore                            # Git exclusion rules (ignores runtime data/ & outputs/)
 └── README.md                             # Documentation & theoretical breakdown
 ```
 
@@ -72,37 +64,39 @@ pip install -r requirements.txt
 
 ## 🚀 Usage
 
-### 1. End-to-End Pipeline (`main.py`)
-Trains all 4 recurrent architectures (Vanilla RNN, LSTM, GRU, BiLSTM) on the 20,000 training subset, validates on 5,000 reviews with early stopping, evaluates on the 25,000 test set, logs the benchmark summary table, saves figures to `outputs/figures/`, and runs sample predictions:
+All Python modules reside in `src/` and can be run directly:
+
+### 1. End-to-End Pipeline (`src/main.py`)
+Trains all 4 recurrent architectures (Vanilla RNN, LSTM, GRU, BiLSTM) on the 20,000 training subset, validates on 5,000 reviews with early stopping, evaluates on the 25,000 test set, logs the benchmark summary table, and runs sample predictions:
 
 ```bash
-python main.py
+python src/main.py
 ```
 
 Optional arguments:
 ```bash
-python main.py --epochs 4 --batch_size 64 --seq_len 200 --lr 0.001 --hidden_dim 128
+python src/main.py --epochs 4 --batch_size 64 --seq_len 200 --lr 0.001 --hidden_dim 128
 ```
 
-### 2. Hyperparameter Tuning (`tune.py`)
+### 2. Hyperparameter Tuning (`src/tune.py`)
 Runs empirical sweeps on:
 - **Sequence Length ($L \in [100, 200, 300, 500]$)**
 - **Hidden Dimension ($H \in [64, 128, 256]$)**
 
-Generates sensitivity curves side-by-side in `outputs/figures/hyperparameter_tuning.png`:
+Generates sensitivity curves side-by-side:
 ```bash
-python tune.py --epochs 3 --batch_size 64
+python src/tune.py --epochs 3 --batch_size 64
 ```
 
-### 3. Sentiment Inference (`inference.py`)
+### 3. Sentiment Inference (`src/inference.py`)
 Run inference on single reviews or custom text using a trained model checkpoint:
 
 ```bash
 # Predict single review
-python inference.py --model_type bilstm --checkpoint outputs/models/bilstm.pt --text "An absolute masterpiece with breathtaking cinematography!"
+python src/inference.py --model_type bilstm --checkpoint outputs/models/bilstm.pt --text "An absolute masterpiece with breathtaking cinematography!"
 
 # Run default benchmark test reviews
-python inference.py --model_type bilstm --checkpoint outputs/models/bilstm.pt
+python src/inference.py --model_type bilstm --checkpoint outputs/models/bilstm.pt
 ```
 
 ---

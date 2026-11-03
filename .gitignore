@@ -1,4 +1,4 @@
-# Python cache
+# Python cache & bytecode
 __pycache__/
 *.py[cod]
 *$py.class
@@ -8,19 +8,13 @@ env/
 venv/
 .venv/
 
-# Project Data & Archives
-data/raw/*
-!data/raw/.gitkeep
-data/processed/*
-!data/processed/.gitkeep
+# Generated runtime directories
+data/
+outputs/
 *.tar.gz
 *.csv
-
-# Outputs & Model Checkpoints
-outputs/models/*.pt
-outputs/models/*.pth
-!outputs/models/.gitkeep
-!outputs/figures/.gitkeep
+*.pt
+*.pth
 
 # Jupyter Notebook Checkpoints
 .ipynb_checkpoints/
