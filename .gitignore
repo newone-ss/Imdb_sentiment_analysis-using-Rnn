@@ -18,3 +18,7 @@ outputs/
 
 # Jupyter Notebook Checkpoints
 .ipynb_checkpoints/
+
+# Local Reports (Untracked)
+PROJECT_REPORT.md
+project_report.md
